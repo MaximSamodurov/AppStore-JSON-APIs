@@ -1,15 +1,15 @@
 
 import UIKit
 
-class AppsController: BaseListController, UICollectionViewDelegateFlowLayout {
+class AppsHeaderHorizontalController: BaseListController {
     
-    let cellId = "id"
+    let cellId = "cellId"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.backgroundColor = .yellow
         
-        collectionView.register(AppsGroupCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.register(UICollectionView.self, forCellWithReuseIdentifier: cellId)
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -18,12 +18,8 @@ class AppsController: BaseListController, UICollectionViewDelegateFlowLayout {
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
+        cell.backgroundColor = .red
         return cell
-        
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return .init(width: view.frame.width, height: 250)
-    }
-
 }
