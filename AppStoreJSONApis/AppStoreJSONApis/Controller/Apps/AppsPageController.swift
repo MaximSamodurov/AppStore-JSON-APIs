@@ -14,6 +14,19 @@ class AppsPageController: BaseListController, UICollectionViewDelegateFlowLayout
         
         // 1 step to get header
         collectionView.register(AppsPageHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerId)
+        
+        fetchData()
+    }
+    
+    fileprivate func fetchData() {
+        Service.shared.fetchGames { AppGroup, error in
+            if let error = error {
+                print("failed to print games", error)
+                return
+            }
+            
+            print(AppGroup?.feed.results)
+        }
     }
     
     // 2 step to get header

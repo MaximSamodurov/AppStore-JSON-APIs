@@ -15,6 +15,7 @@
 		B2366344293726EE004CFFF0 /* BaseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2366343293726EE004CFFF0 /* BaseTabBarController.swift */; };
 		B23663472939FA23004CFFF0 /* AppsSearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23663462939FA23004CFFF0 /* AppsSearchController.swift */; };
 		B236634A293A0A83004CFFF0 /* SearchResultsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2366349293A0A83004CFFF0 /* SearchResultsCell.swift */; };
+		B241BA472942396100828010 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B241BA462942396100828010 /* AppGroup.swift */; };
 		B24F10B8293E1D8800A0AE15 /* AppsPageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24F10B7293E1D8800A0AE15 /* AppsPageController.swift */; };
 		B24F10BA293E4DED00A0AE15 /* BaseListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24F10B9293E4DED00A0AE15 /* BaseListController.swift */; };
 		B24F10BE293E517F00A0AE15 /* AppsGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B24F10BD293E517F00A0AE15 /* AppsGroupCell.swift */; };
@@ -45,6 +46,7 @@
 		B2366343293726EE004CFFF0 /* BaseTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabBarController.swift; sourceTree = "<group>"; };
 		B23663462939FA23004CFFF0 /* AppsSearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsSearchController.swift; sourceTree = "<group>"; };
 		B2366349293A0A83004CFFF0 /* SearchResultsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsCell.swift; sourceTree = "<group>"; };
+		B241BA462942396100828010 /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
 		B24F10B7293E1D8800A0AE15 /* AppsPageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsPageController.swift; sourceTree = "<group>"; };
 		B24F10B9293E4DED00A0AE15 /* BaseListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseListController.swift; sourceTree = "<group>"; };
 		B24F10BD293E517F00A0AE15 /* AppsGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppsGroupCell.swift; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				B2EAB8FA293CCBE900C70C1D /* SearchResult.swift */,
+				B241BA462942396100828010 /* AppGroup.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 				B236633229371BDC004CFFF0 /* ViewController.swift in Sources */,
 				B2AFE1BC293B6E330092A7C2 /* 05_UIView+Layout.swift in Sources */,
 				B2EAB8FB293CCBE900C70C1D /* SearchResult.swift in Sources */,
+				B241BA472942396100828010 /* AppGroup.swift in Sources */,
 				B24F10B8293E1D8800A0AE15 /* AppsPageController.swift in Sources */,
 				B236634A293A0A83004CFFF0 /* SearchResultsCell.swift in Sources */,
 				B24F10BA293E4DED00A0AE15 /* BaseListController.swift in Sources */,
