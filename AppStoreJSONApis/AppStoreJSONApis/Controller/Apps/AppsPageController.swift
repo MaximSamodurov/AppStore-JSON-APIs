@@ -18,14 +18,20 @@ class AppsPageController: BaseListController, UICollectionViewDelegateFlowLayout
         fetchData()
     }
     
+    var mainTitleGames: AppGroup? // get access to fetched Data
+    
     fileprivate func fetchData() {
-        Service.shared.fetchGames { AppGroup, error in
+        Service.shared.fetchGames { appGroup, error in
+            
             if let error = error {
                 print("failed to print games", error)
                 return
             }
             
-            print(AppGroup?.feed.results)
+            self.mainTitleGames = appGroup // get access to "mainTitleGames
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
         }
     }
     
@@ -42,11 +48,14 @@ class AppsPageController: BaseListController, UICollectionViewDelegateFlowLayout
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return 1
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! AppsGroupCell
+        cell.titleLabel.text = mainTitleGames?.feed.title
+        cell.horizontalController.appGroup = mainTitleGames
+        cell.horizontalController.collectionView.reloadData()
         return cell
     }
     

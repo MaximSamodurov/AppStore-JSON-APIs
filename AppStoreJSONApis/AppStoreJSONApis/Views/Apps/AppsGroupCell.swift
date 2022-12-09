@@ -1,8 +1,6 @@
 
 import UIKit
 
-
-
 class AppsGroupCell: UICollectionViewCell {
     
     let titleLabel = UILabel(text: "App Section", font: .boldSystemFont(ofSize: 30))
