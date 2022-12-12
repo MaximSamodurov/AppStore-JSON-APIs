@@ -2,9 +2,7 @@
 import Foundation
 
 struct AppGroup: Decodable {
-    
     let feed: Feed
-    
 }
 
 struct Feed: Decodable {
