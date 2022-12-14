@@ -61,4 +61,25 @@ class Service {
             
         } .resume()
     }
+    
+    func fetchSocialApp(completion: @escaping ([SocialApp]?, Error?) -> ()) {
+        let urlString = "https://rss.applemarketingtools.com/api/v2/us/apps/top-free/50/apps.json"
+        
+        guard let url = URL(string: urlString) else { return }
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            
+            if let error = error {
+                completion(nil, error)
+                return
+            }
+            
+            do {
+               let objects = try JSONDecoder().decode([SocialApp].self, from: data!)
+                completion(objects, nil)
+            } catch {
+                completion(nil, error)
+            }
+            
+        } .resume()
+    }
 }

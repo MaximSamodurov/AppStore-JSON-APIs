@@ -5,9 +5,9 @@ class AppsPageHeader: UICollectionReusableView {
     
     let appHeaderHorizontalController = AppsHeaderHorizontalController()
     
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         addSubview(appHeaderHorizontalController.view)
         appHeaderHorizontalController.view.fillSuperview()
     }
