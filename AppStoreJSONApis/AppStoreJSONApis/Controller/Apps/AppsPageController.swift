@@ -96,7 +96,7 @@ class AppsPageController: BaseListController, UICollectionViewDelegateFlowLayout
             if let group = group3 {
                 self.groups.append(group)
             }
-//            self.collectionView.reloadData()
+            self.collectionView.reloadData()
         }
     }
     
