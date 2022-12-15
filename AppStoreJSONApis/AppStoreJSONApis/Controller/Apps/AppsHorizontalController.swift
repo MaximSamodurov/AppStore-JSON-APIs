@@ -1,7 +1,7 @@
 
 import UIKit
 
-class AppsHorizontalController: BaseListController, UICollectionViewDelegateFlowLayout {
+class AppsHorizontalController: HorizontalSnappingController, UICollectionViewDelegateFlowLayout {
     
     let cellId = "id"
     
@@ -11,16 +11,12 @@ class AppsHorizontalController: BaseListController, UICollectionViewDelegateFlow
         super.viewDidLoad()
         
         collectionView.backgroundColor = .white
-        
         collectionView.register(AppRowCell.self, forCellWithReuseIdentifier: cellId)
-        
-        if let layout = collectionViewLayout as? UICollectionViewFlowLayout {
-            layout.scrollDirection = .horizontal
-        }
+//        collectionView.isPagingEnabled = true
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return appGroup?.feed.results.count ?? 0 
+        return appGroup?.feed.results.count ?? 0
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
