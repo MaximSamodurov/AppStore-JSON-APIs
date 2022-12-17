@@ -4,7 +4,7 @@ import UIKit
 class HorizontalSnappingController: UICollectionViewController {
     
     init() {
-        let layout = SnappingLayout()
+        let layout = BetterSnappingLayout()
         layout.scrollDirection = .horizontal
         super.init(collectionViewLayout: layout)
         collectionView.decelerationRate = .fast

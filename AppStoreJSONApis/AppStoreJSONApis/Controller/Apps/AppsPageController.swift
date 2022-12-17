@@ -1,10 +1,3 @@
-//
-//  AppsController.swift
-//  AppStoreJSONApis
-//
-//  Created by Brian Voong on 2/14/19.
-//  Copyright © 2019 Brian Voong. All rights reserved.
-//
 
 import UIKit
 
@@ -20,6 +13,7 @@ class AppsPageController: BaseListController, UICollectionViewDelegateFlowLayout
         aiv.hidesWhenStopped = true
         return aiv
     }()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,10 +115,16 @@ class AppsPageController: BaseListController, UICollectionViewDelegateFlowLayout
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! AppsGroupCell
         
         let appGroup = groups[indexPath.item]
-
         cell.titleLabel.text = appGroup.feed.title
         cell.horizontalController.appGroup = appGroup
         cell.horizontalController.collectionView.reloadData()
+        cell.horizontalController.didSelectHandler = { [weak self] feedResult in
+            let controller = AppDetailController()
+            controller.appId = feedResult.id
+            controller.view.backgroundColor = .red
+            controller.navigationItem.title = feedResult.name
+            self?.navigationController?.pushViewController(controller, animated: true)
+        }
         return cell
     }
     
