@@ -4,17 +4,15 @@ import UIKit
 class AppDetailCell: UICollectionViewCell {
     
     let appIconImageView = UIImageView(cornerRadius: 16)
-    
     let nameLabel = UILabel(text: "App Name", font: .boldSystemFont(ofSize: 24), numberOfLines: 2)
-    
     let priceButton = UIButton(title: "$ 1.99")
-    
     let whatsNewLabel = UILabel(text: "What's New", font: .boldSystemFont(ofSize: 20))
-    
     let releaseNotesLabel = UILabel(text: "Release Notes", font: .systemFont(ofSize: 16), numberOfLines: 0)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        
+        
         
         appIconImageView.backgroundColor = .blue
         appIconImageView.constrainWidth(constant: 140)
