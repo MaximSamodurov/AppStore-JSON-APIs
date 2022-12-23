@@ -14,7 +14,7 @@ class AppRowCell: UICollectionViewCell {
         
         let stackView = UIStackView(arrangedSubviews: [imageView, VerticalStackView(arrangedSubViews: [nameLabel, companyLabel], spacing: 4), getButton])
         getButton.backgroundColor = UIColor(white: 0.95, alpha: 1)
-        getButton.constrainWidth(constant: 80)
+        getButton.constrainWidth(constant: 70)
         getButton.constrainHeight(constant: 32)
         getButton.layer.cornerRadius = 32 / 2
         getButton.titleLabel?.font = .boldSystemFont(ofSize: 16)
