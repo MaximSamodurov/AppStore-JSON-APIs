@@ -7,9 +7,7 @@ class ReviewRowCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        backgroundColor = .yellow
-        
+                
         addSubview(reviewsController.view)
         reviewsController.view.fillSuperview()
     }
