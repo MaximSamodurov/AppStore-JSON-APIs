@@ -3,11 +3,17 @@ import UIKit
 
 class AppFullScreenController: UITableViewController {
     
+    var dismissHandler: (() ->())?
+    var todayItem: TodayItem? 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.tableFooterView = UIView()
-        tableView.separatorStyle = .none 
+        tableView.separatorStyle = .none
+        tableView.allowsSelection = false
+        // растянуть цвет бэкграунда
+        tableView.contentInsetAdjustmentBehavior = .never
     }
     
     
@@ -15,14 +21,23 @@ class AppFullScreenController: UITableViewController {
         return 2
     }
     
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if indexPath.item == 0 {
-          return AppFullScreenHeaderCell()
+            let headerCell = AppFullScreenHeaderCell()
+            headerCell.closeButton.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
+            headerCell.todayCell.todayItem = todayItem
+            headerCell.todayCell.layer.cornerRadius = 0 
+            return headerCell
         }
-        
         let cell = AppFullNameDescription()
-        return cell 
+        return cell
+    }
+    
+    @objc fileprivate func handleDismiss(button: UIButton) {
+        button.isHidden = true
+        dismissHandler?()
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

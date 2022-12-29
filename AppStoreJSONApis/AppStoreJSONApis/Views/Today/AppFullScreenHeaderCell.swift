@@ -7,6 +7,7 @@ class AppFullScreenHeaderCell: UITableViewCell {
     let closeButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(UIImage(imageLiteralResourceName: "close_button"), for: .normal)
+        button.tag = 1
         return button
     }()
     
@@ -17,7 +18,7 @@ class AppFullScreenHeaderCell: UITableViewCell {
         todayCell.fillSuperview()
         
         addSubview(closeButton)
-        closeButton.anchor(top: topAnchor, leading: nil, bottom: nil, trailing: trailingAnchor, padding: .init(top: 3, left: 0, bottom: 0, right: 8), size: .init(width: 48, height: 48))
+        closeButton.anchor(top: topAnchor, leading: nil, bottom: nil, trailing: trailingAnchor, padding: .init(top: 44, left: 0, bottom: 0, right: 8), size: .init(width: 48, height: 48))
     }
     
     required init?(coder: NSCoder) {
