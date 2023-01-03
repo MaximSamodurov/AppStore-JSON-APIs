@@ -4,7 +4,18 @@ import UIKit
 class AppFullScreenController: UITableViewController {
     
     var dismissHandler: (() ->())?
-    var todayItem: TodayItem? 
+    var todayItem: TodayItem?
+        
+    let statusBarHeight: CGFloat = {
+        var heightToReturn: CGFloat = 0.0
+             for window in UIApplication.shared.windows {
+                 if let height = window.windowScene?.statusBarManager?.statusBarFrame.height, height > heightToReturn {
+                     heightToReturn = height
+                 }
+             }
+        return heightToReturn
+    }()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -14,6 +25,8 @@ class AppFullScreenController: UITableViewController {
         tableView.allowsSelection = false
         // растянуть цвет бэкграунда
         tableView.contentInsetAdjustmentBehavior = .never
+//        let height = window.windowScene?.statusBarManager?.statusBarFrame.height
+        tableView.contentInset = .init(top: 0, left: 0, bottom: statusBarHeight, right: 0)
     }
     
     
@@ -42,18 +55,8 @@ class AppFullScreenController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row == 0 {
-            return 450
+            return 500
         }
         return super.tableView(tableView, heightForRowAt: indexPath)
     }
-    
-    // поставим картинку из TodayCell в нашу всплывающую вьюху
-//    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        let header = TodayCell()
-//        return header
-//    }
-//
-//    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        return 450
-//    }
 }

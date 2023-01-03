@@ -65,6 +65,10 @@ class AppsPageController: BaseListController, UICollectionViewDelegateFlowLayout
         dispatchGroup.enter()
         Service.shared.fetchSocialApp { (apps, err) in
             // you should check the err
+            if let err = err {
+                print(err)
+            }
+            
             dispatchGroup.leave()
             self.socialApp = apps ?? []
 //            DispatchQueue.main.async {
