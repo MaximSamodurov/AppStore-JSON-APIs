@@ -246,7 +246,8 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout, U
             
             guard let cell = self.appFullScreenController.tableView.cellForRow(at: [0, 0]) as? AppFullScreenHeaderCell else { return }
             // что бы close button кнопка исчезала при сворачивании full screen 
-            cell.closeButton.alpha = 0
+//            cell.closeButton.alpha = 0
+            self.appFullScreenController.closeButton.alpha = 0 
             cell.todayCell.topConstraint.constant = 15
             cell.layoutIfNeeded()
             
