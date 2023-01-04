@@ -1,7 +1,7 @@
 
 import UIKit
 
-class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
+class TodayController: BaseListController, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
     
     var items = [TodayItem]()
     
@@ -21,8 +21,14 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
         tabBarController?.tabBar.superview?.setNeedsLayout()
     }
     
+    let blurVisualEffect = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.addSubview(blurVisualEffect)
+        blurVisualEffect.fillSuperview()
+        blurVisualEffect.alpha = 0
         
         view.addSubview(activityIndicatorView)
         activityIndicatorView.centerInSuperview()
@@ -96,10 +102,61 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
         appFullScreenController.todayItem = items[indexPath.row]
         // удаление popUp при нажатии
         appFullScreenController.dismissHandler = {
-            self.handleRemoveRedView()
+            self.handleAppFullscreenDismissal()
         }
         appFullScreenController.view.layer.cornerRadius = 16
         self.appFullScreenController = appFullScreenController
+        
+        // #1 setup our pan gesture
+        let gesture  = UIPanGestureRecognizer(target: self, action: #selector(handleDrag))
+        
+        // gesture.delegate - что бы работали два жеста(в нашем случае скролл и удержание)
+        gesture.delegate = self
+        appFullScreenController.view.addGestureRecognizer(gesture)
+        // #2 add blur effect
+        
+        // #3 not to interfere with our UITableView scrolling
+    }
+    
+    // для gesture.delegate, так же надо подписать класс на UIGestureRecognizerDelegate
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    var appFullscreenBeginOffset: CGFloat = 0
+    
+    @objc fileprivate func handleDrag(gesture: UIPanGestureRecognizer) {
+        if gesture.state == .began {
+            appFullscreenBeginOffset = appFullScreenController.tableView.contentOffset.y
+        }
+        
+        if appFullScreenController.tableView.contentOffset.y > 0 {
+            return
+        }
+        let translationY = gesture.translation(in: appFullScreenController.view).y
+        
+        // когда жест (удержание начинает работать) срабатывает трансформ вью уменьшается
+        if gesture.state == .changed {
+            if translationY > 0 {
+                let trueOffset = translationY - appFullscreenBeginOffset
+                var scale = 1 - trueOffset  / 1000
+                scale = min(1, scale)
+                // в какой момент будет останавливаться уменьшение
+                scale = max(0.5, scale)
+                print(scale)
+                
+                // переход от full screen к today screen
+                let transform: CGAffineTransform = .init(scaleX: scale, y: scale)
+                appFullScreenController.view.transform = transform
+            }
+        }
+        
+        // когда жест (удержание) заканчивается срабатывает handle dismisal
+        if gesture.state == .ended {
+            if translationY > 0 {
+                handleAppFullscreenDismissal()
+            }
+        }
     }
     
     fileprivate func setupStartingCellFrame(_ indexPath: IndexPath) {
@@ -114,7 +171,7 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     fileprivate func setupAppFullscreenStartingPosition(_ indexPath: IndexPath) {
         let fullscreenView = appFullScreenController.view!
 
-        fullscreenView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleRemoveRedView)))
+        fullscreenView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleAppFullscreenDismissal)))
         view.addSubview(fullscreenView)
         
         // что бы header из файла AppFullScreenController отображался
@@ -137,6 +194,8 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     
     fileprivate func beginAnimationAppFullscreen() {
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut) {
+            
+            self.blurVisualEffect.alpha = 1
             
             self.anchoredConstraints?.top?.constant = 0
             self.anchoredConstraints?.leading?.constant = 0
@@ -167,9 +226,11 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     var startingFrame: CGRect?
     
     // удаление popUp при нажатии
-    @objc func handleRemoveRedView() {
+    @objc func handleAppFullscreenDismissal() {
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut, animations: {
             
+            self.blurVisualEffect.alpha = 0
+            self.appFullScreenController.view.transform = .identity
             self.appFullScreenController.tableView.scrollToRow(at: [0, 0], at: .top, animated: true)
             
             guard let startingFrame = self.startingFrame else { return }
@@ -184,6 +245,8 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
             self.tabBarController?.tabBar.frame.origin.y -= 100
             
             guard let cell = self.appFullScreenController.tableView.cellForRow(at: [0, 0]) as? AppFullScreenHeaderCell else { return }
+            // что бы close button кнопка исчезала при сворачивании full screen 
+            cell.closeButton.alpha = 0
             cell.todayCell.topConstraint.constant = 15
             cell.layoutIfNeeded()
             
@@ -214,23 +277,18 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
         
         let collectionView = gesture.view
         
-        
         var superview = collectionView?.superview
         while superview != nil {
             if let cell = superview as? TodayMultipleAppCell {
                 guard let indexPath = self.collectionView.indexPath(for: cell) else { return }
-                
                 let apps = self.items[indexPath.item].apps
                 let fullController = TodayMultipleAppsController(mode: .fullscreen)
                 fullController.apps = apps
                 present(BackEnabledNavigationController(rootViewController: fullController), animated: true)
                 return
             }
-            
             superview = superview?.superview
         }
-        
-        
     }
     
     static let cellSize: CGFloat = 500

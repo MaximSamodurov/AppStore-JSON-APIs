@@ -5,6 +5,13 @@ class AppFullScreenController: UITableViewController {
     
     var dismissHandler: (() ->())?
     var todayItem: TodayItem?
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y < 0 {
+            scrollView.isScrollEnabled = false
+            scrollView.isScrollEnabled = true
+        }
+    }
         
     let statusBarHeight: CGFloat = {
         var heightToReturn: CGFloat = 0.0
@@ -43,6 +50,7 @@ class AppFullScreenController: UITableViewController {
             headerCell.todayCell.todayItem = todayItem
             headerCell.todayCell.layer.cornerRadius = 0
             headerCell.clipsToBounds = true
+            headerCell.todayCell.backgroundView = nil
             return headerCell
         }
         let cell = AppFullNameDescription()
