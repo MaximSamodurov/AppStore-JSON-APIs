@@ -8,6 +8,7 @@ class AppFullScreenHeaderCell: UITableViewCell {
         let button = UIButton(type: .system)
         button.setImage(UIImage(imageLiteralResourceName: "close_button"), for: .normal)
         button.tag = 1
+        button.tintColor = UIColor(white: 0.4, alpha: 1)
         return button
     }()
     

@@ -9,13 +9,13 @@ class TodayMultipleAppsController: BaseListController, UICollectionViewDelegateF
     
     var appGroup: AppGroup?
     
-    let closeButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setImage(UIImage(imageLiteralResourceName: "close_button"), for: .normal)
-        button.tintColor = .darkGray
-        button.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
-        return button
-    }()
+//    let closeButton: UIButton = {
+//        let button = UIButton(type: .system)
+//        button.setImage(UIImage(imageLiteralResourceName: "close_button"), for: .normal)
+//        button.tintColor = .darkGray
+//        button.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
+//        return button
+//    }()
     
     @objc func handleDismiss() {
         dismiss(animated: true)
@@ -32,13 +32,13 @@ class TodayMultipleAppsController: BaseListController, UICollectionViewDelegateF
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // когда разворачивается второй экран что бы он был прокручиваемый
-        if mode == .fullscreen {
-            setupCloseButton()
-        } else if mode == .small {
-            collectionView.isScrollEnabled = false
-        }
-        
+        // когда разворачивается второй экран что что бы была кнопка
+//        if mode == .fullscreen {
+//            setupCloseButton()
+//        } else if mode == .small {
+//            collectionView.isScrollEnabled = false
+        //        }
+
         collectionView.backgroundColor = .white
         collectionView.register(MultipleAppCell.self, forCellWithReuseIdentifier: cellId)
         
@@ -46,10 +46,10 @@ class TodayMultipleAppsController: BaseListController, UICollectionViewDelegateF
     
 //    override var prefersStatusBarHidden: Bool { return true }
     
-    func setupCloseButton() {
-        view.addSubview(closeButton)
-        closeButton.anchor(top: view.topAnchor, leading: nil, bottom: nil, trailing: view.trailingAnchor, padding: .init(top: 16, left: 0, bottom: 0, right: 16), size: .init(width: 44, height: 44))
-    }
+//    func setupCloseButton() {
+//        view.addSubview(closeButton)
+//        closeButton.anchor(top: view.topAnchor, leading: nil, bottom: nil, trailing: view.trailingAnchor, padding: .init(top: 16, left: 0, bottom: 0, right: 16), size: .init(width: 44, height: 44))
+//    }
     
     
     // для отступов

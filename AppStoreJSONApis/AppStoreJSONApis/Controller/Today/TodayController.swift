@@ -3,23 +3,7 @@ import UIKit
 
 class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     
-    //    fileprivate let cellId = "cellId"
-    //    fileprivate let todayMultipleAppCell = "todayMultipleAppCell"
-    
-    
-    //    let items = [
-    //        TodayItem.init(category: "Life Hack", title: "Utilizing Your Time", image: UIImage(imageLiteralResourceName: "garden"), description: "All The Tools and apps you need to intelegently organize your life right way.", backgroundColor: .white, cellType: .single),
-    //
-    //        TodayItem.init(category: "SECOND MULTIPLE CELL", title: "Test Drive These CarPlay Apps", image: UIImage(imageLiteralResourceName: "garden"), description: "", backgroundColor: .white, cellType: .multiple),
-    //
-    //        TodayItem.init(category: "Holidays", title: "Travel On A Budget", image: UIImage(imageLiteralResourceName: "holiday"), description: "Find out all you need to know on how to travel without packing everything", backgroundColor: #colorLiteral(red: 0.986785233, green: 0.9638366103, blue: 0.7270910144, alpha: 1), cellType: .single),
-    //
-    //        TodayItem.init(category: "MULTIPLE CELL", title: "Test Drive These CarPlay Apps", image: UIImage(imageLiteralResourceName: "garden"), description: "", backgroundColor: .white, cellType: .multiple)
-    //    ]
-    
-    
     var items = [TodayItem]()
-
     
     // add animated spiner before finished fetched data
     let activityIndicatorView: UIActivityIndicatorView = {
@@ -43,13 +27,8 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
         view.addSubview(activityIndicatorView)
         activityIndicatorView.centerInSuperview()
         fetchData()
-        
-        //        if let layout = collectionViewLayout as?
-        //            UICollectionViewFlowLayout {
-        //            layout.scrollDirection = .horizontal
-        //        }
         navigationController?.isNavigationBarHidden = true
-        collectionView.backgroundColor = UIColor(white: 0.85, alpha: 1)
+        collectionView.backgroundColor = UIColor(white: 0.95, alpha: 1)
         collectionView.register(TodayCell.self, forCellWithReuseIdentifier: TodayItem.CellType.single.rawValue)
         collectionView.register(TodayMultipleAppCell.self, forCellWithReuseIdentifier: TodayItem.CellType.multiple.rawValue)
     }
@@ -83,11 +62,13 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
             print("Finished Fetching")
             self.activityIndicatorView.stopAnimating()
             self.items = [
+                TodayItem.init(category: "Life Hack", title: "Utilizing Your Time", image: UIImage(imageLiteralResourceName: "garden"), description: "All The Tools and apps you need to intelegently organize your life right way.", backgroundColor: .white, cellType: .single, apps: []),
+                
                 TodayItem.init(category: "Daily List", title: topPaidApps?.feed.title ?? "", image: UIImage(imageLiteralResourceName: "garden"), description: "", backgroundColor: .white, cellType: .multiple, apps: topPaidApps?.feed.results ?? []),
                 
                 TodayItem.init(category: "Daily List", title: topFreeApps?.feed.title ?? "", image: UIImage(imageLiteralResourceName: "garden"), description: "", backgroundColor: .white, cellType: .multiple, apps: topFreeApps?.feed.results ?? []),
                 
-                TodayItem.init(category: "Life Hack", title: "Utilizing Your Time", image: UIImage(imageLiteralResourceName: "garden"), description: "All The Tools and apps you need to intelegently organize your life right way.", backgroundColor: .white, cellType: .single, apps: [])
+                TodayItem(category: "Holidays", title: "Travel On Budget", image: UIImage(imageLiteralResourceName: "holiday"), description: "Find out all you need to know on how to travel without packing everything!", backgroundColor: #colorLiteral(red: 0.986785233, green: 0.9638366103, blue: 0.7270910144, alpha: 1), cellType: .single, apps: [])
             ]
             self.collectionView.reloadData()
         }
@@ -95,68 +76,72 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
     
     var appFullScreenController: AppFullScreenController!
     
-    var topConstraint: NSLayoutConstraint?
-    var leadingConstraint: NSLayoutConstraint?
-    var widthConstraint: NSLayoutConstraint?
-    var heightConstraint: NSLayoutConstraint?
+    fileprivate func showDailyListFullScreen(_ indexPath: IndexPath) {
+        let fullController = TodayMultipleAppsController(mode: .fullscreen)
+        fullController.apps = self.items[indexPath.item].apps
+        present(BackEnabledNavigationController(rootViewController: fullController), animated: true)
+    }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        if items[indexPath.item].cellType == .multiple {
-            let fullController = TodayMultipleAppsController(mode: .fullscreen)
-            fullController.apps = self.items[indexPath.item].apps
-            present(UINavigationController(rootViewController: fullController), animated: true)
-            return
+        switch items[indexPath.item].cellType {
+        case .multiple:
+            showDailyListFullScreen(indexPath)
+        default:
+            showSingleAppFullScreen(indexPath: indexPath)
         }
-        
+    }
+    
+    fileprivate func setupSingleAppFullscreenController(_ indexPath: IndexPath) {
         let appFullScreenController = AppFullScreenController()
         appFullScreenController.todayItem = items[indexPath.row]
-        let redView = appFullScreenController.view!
-        
         // удаление popUp при нажатии
-        
         appFullScreenController.dismissHandler = {
             self.handleRemoveRedView()
         }
-        
-        redView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleRemoveRedView)))
-        view.addSubview(redView)
-        
-        // что бы header из файла AppFullScreenController отображался
-        addChild(appFullScreenController)
-        
+        appFullScreenController.view.layer.cornerRadius = 16
         self.appFullScreenController = appFullScreenController
-        
-        // убираем баг с прокручиванем страницы (true в handleRemover)
-        self.collectionView.isUserInteractionEnabled = false
-        
+    }
+    
+    fileprivate func setupStartingCellFrame(_ indexPath: IndexPath) {
         // что бы новый cell накладывался на уже существующий cell
         guard let cell = collectionView.cellForItem(at: indexPath) else { return }
         // что бы новый cell появлялся ровно на месте cell под ним
         guard let startingFrame = cell.superview?.convert(cell.frame, to: nil) else { return }
-        
         // to capture starting Frame of redView
         self.startingFrame = startingFrame
+    }
+    
+    fileprivate func setupAppFullscreenStartingPosition(_ indexPath: IndexPath) {
+        let fullscreenView = appFullScreenController.view!
+
+        fullscreenView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleRemoveRedView)))
+        view.addSubview(fullscreenView)
         
-        //translateAutoResizingMask для того что бы анимация заработала
-        redView.translatesAutoresizingMaskIntoConstraints = false
+        // что бы header из файла AppFullScreenController отображался
+        addChild(appFullScreenController)
         
-        topConstraint = redView.topAnchor.constraint(equalTo: view.topAnchor, constant: startingFrame.origin.y)
-        leadingConstraint = redView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: startingFrame.origin.x)
-        widthConstraint = redView.widthAnchor.constraint(equalToConstant: startingFrame.width)
-        heightConstraint = redView.heightAnchor.constraint(equalToConstant: startingFrame.height)
+        // убираем баг с прокручиванем страницы (true в handleRemover)
+        self.collectionView.isUserInteractionEnabled = false
         
-        [topConstraint, leadingConstraint, widthConstraint, heightConstraint].forEach({$0?.isActive = true})
+        setupStartingCellFrame(indexPath)
+        
+        // проверка optional что бы не было ошибок с constraint ниже
+        guard let startingFrame = self.startingFrame else  { return }
+        
+        self.anchoredConstraints = fullscreenView.anchor(top: view.topAnchor, leading: view.leadingAnchor, bottom: nil, trailing: nil, padding: .init(top: startingFrame.origin.y, left: startingFrame.origin.x, bottom: 0, right: 0), size: .init(width: startingFrame.width, height: startingFrame.height))
+        
         self.view.layoutIfNeeded() // starts animation
-        
-        redView.layer.cornerRadius = 16
-        
-        // от маленького cell до раскрытия на весь экра с анимацией
+    }
+    
+    var anchoredConstraints: AnchoredConstraints?
+    
+    fileprivate func beginAnimationAppFullscreen() {
         UIView.animate(withDuration: 0.7, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseOut) {
-            self.topConstraint?.constant = 0
-            self.leadingConstraint?.constant = 0
-            self.widthConstraint?.constant = self.view.frame.width
-            self.heightConstraint?.constant = self.view.frame.height
+            
+            self.anchoredConstraints?.top?.constant = 0
+            self.anchoredConstraints?.leading?.constant = 0
+            self.anchoredConstraints?.width?.constant = self.view.frame.width
+            self.anchoredConstraints?.height?.constant = self.view.frame.height
             
             self.view.layoutIfNeeded() // starts animation
             // для того что бы при раскрытии убирался нижний таб бар
@@ -168,6 +153,17 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
         }
     }
     
+    fileprivate func showSingleAppFullScreen(indexPath: IndexPath) {
+        //#1
+        setupSingleAppFullscreenController(indexPath)
+        
+        //#2 setup fullscreen on its starting position
+        setupAppFullscreenStartingPosition(indexPath)
+        
+        //#3 begin fullscren animation
+        beginAnimationAppFullscreen()
+    }
+    
     var startingFrame: CGRect?
     
     // удаление popUp при нажатии
@@ -177,11 +173,10 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
             self.appFullScreenController.tableView.scrollToRow(at: [0, 0], at: .top, animated: true)
             
             guard let startingFrame = self.startingFrame else { return }
-            
-            self.topConstraint?.constant = startingFrame.origin.y
-            self.leadingConstraint?.constant = startingFrame.origin.x
-            self.widthConstraint?.constant = startingFrame.width
-            self.heightConstraint?.constant = startingFrame.height
+            self.anchoredConstraints?.top?.constant = startingFrame.origin.y
+            self.anchoredConstraints?.leading?.constant = startingFrame.origin.x
+            self.anchoredConstraints?.width?.constant = startingFrame.width
+            self.anchoredConstraints?.height?.constant = startingFrame.height
             
             self.view.layoutIfNeeded() // starts animation
             
@@ -228,13 +223,13 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout {
                 let apps = self.items[indexPath.item].apps
                 let fullController = TodayMultipleAppsController(mode: .fullscreen)
                 fullController.apps = apps
-                present(fullController, animated: true)
+                present(BackEnabledNavigationController(rootViewController: fullController), animated: true)
                 return
             }
             
             superview = superview?.superview
         }
-
+        
         
     }
     

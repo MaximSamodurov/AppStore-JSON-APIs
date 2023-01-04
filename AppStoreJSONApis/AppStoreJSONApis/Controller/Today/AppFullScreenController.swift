@@ -39,19 +39,20 @@ class AppFullScreenController: UITableViewController {
         
         if indexPath.item == 0 {
             let headerCell = AppFullScreenHeaderCell()
-            headerCell.closeButton.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
+//            headerCell.closeButton.addTarget(self, action: #selector(handleDismiss), for: .touchUpInside)
             headerCell.todayCell.todayItem = todayItem
-            headerCell.todayCell.layer.cornerRadius = 0 
+            headerCell.todayCell.layer.cornerRadius = 0
+            headerCell.clipsToBounds = true
             return headerCell
         }
         let cell = AppFullNameDescription()
         return cell
     }
     
-    @objc fileprivate func handleDismiss(button: UIButton) {
-        button.isHidden = true
-        dismissHandler?()
-    }
+//    @objc fileprivate func handleDismiss(button: UIButton) {
+//        button.isHidden = true
+//        dismissHandler?()
+//    }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row == 0 {
