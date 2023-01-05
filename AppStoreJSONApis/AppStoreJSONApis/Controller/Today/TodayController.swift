@@ -65,7 +65,7 @@ class TodayController: BaseListController, UICollectionViewDelegateFlowLayout, U
         
         
         dispatchGroup.notify(queue: .main) {
-            print("Finished Fetching")
+//            print("Finished Fetching")
             self.activityIndicatorView.stopAnimating()
             self.items = [
                 TodayItem.init(category: "Life Hack", title: "Utilizing Your Time", image: UIImage(imageLiteralResourceName: "garden"), description: "All The Tools and apps you need to intelegently organize your life right way.", backgroundColor: .white, cellType: .single, apps: []),

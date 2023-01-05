@@ -6,13 +6,15 @@ struct SearchResult: Decodable {
 }
 
 struct Result: Decodable {
-    let trackId: Int    
-    let trackName: String
-    let primaryGenreName: String
-    var averageUserRating: Double?
-    let artworkUrl100: String //app icon
-    let screenshotUrls: [String]
+    let trackId: Int
+    let trackName: String?
+    var primaryGenreName: String?
+    var averageUserRating: Float?
+    var screenshotUrls: [String]?
+    let artworkUrl100: String // app icon
     var formattedPrice: String?
-    let description: String
+    var description: String?
     var releaseNotes: String?
+    var artistName: String?
+    var collectionName: String?
 }

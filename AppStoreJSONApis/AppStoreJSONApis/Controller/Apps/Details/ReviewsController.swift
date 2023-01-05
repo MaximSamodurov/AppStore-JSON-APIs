@@ -35,7 +35,6 @@ class ReviewsController: HorizontalSnappingController, UICollectionViewDelegateF
             if let ratingInt = Int(entry!.rating.label) {
                 view.alpha = index >= ratingInt ? 0 : 1
             }
-                
         }
         
         return cell
